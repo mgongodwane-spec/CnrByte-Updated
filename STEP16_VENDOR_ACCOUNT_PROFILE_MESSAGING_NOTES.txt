@@ -1,0 +1,59 @@
+CnrByte Step 16 — Vendor Accounts, Business Profiles and Customer Messaging
+
+BASELINE
+- Built on the Step 15 client account/profile/messaging checkpoint.
+- No base schema was replaced. New profile columns are added by the new idempotent migration.
+
+WHAT CHANGED
+1. Vendor business settings
+- Added vendors/profile.pge.php and vendors/profile.run.php.
+- Vendor owners can edit registration/business details, business email/phone, physical and postal addresses, About/Vision/Mission/Values content, Client Care and Website contacts, and optional business logo/section images.
+- Account username, personal email/phone, personal address and password remain in the existing client account settings page. Vendor settings links to that page instead of duplicating login credentials.
+- Profile updates are POST-only, CSRF-protected, use prepared statements, validate field lengths and email/website values, and verify vendor ownership using client_id/user_id.
+- Optional images are size-limited, checked using detected MIME type and extension, renamed to random filenames, and stored under uploads/vendors/profile.
+
+2. Vendor dashboard and shared header
+- Rebuilt vendors/dashboard.pge.php to remove duplicate <head>/<body> document sections and present a responsive dashboard summary.
+- Added links to business profile, personal settings, order messages, customer direct chats, branch/shift/staff/HR modules, products, orders, financials and banking.
+- Added Business Profile, Personal Settings and Customer Chats to the shared vendor navigation.
+- Fixed the shared global bootstrap so it no longer emits a header before the page's doctype; page templates explicitly render the shared header inside <body>.
+- The legacy vendor create page now has a complete, direct form; the old edit URL forwards to the maintained business profile settings page.
+
+3. Vendor/client messaging
+- Added messages/vendor_chat.pge.php and messages/vendor_chat.run.php for vendor-side direct customer chat.
+- Added messages/vendor_direct.run.php and extended messages/chat.pge.php so clients can open direct conversations with businesses linked to their orders.
+- Both directions use cnrbyte_messages and cnrbyte_notifications, use CSRF tokens, and only allow direct chats when a marketplace order associates the client and vendor.
+- Existing order-specific conversations remain in the Messages module.
+
+4. Security and legacy integration
+- Added vendors/vendor_guard.php and applied it to vendor branch/shift/staff/HR pages and legacy mutation endpoints.
+- Added POST and CSRF enforcement to legacy vendor mutation endpoints.
+- Updated the shared generic form handler to require CSRF and verify the selected owner record belongs to the current client/vendor workspace.
+- Added CSRF fields to the generic forms.
+- Fixed vendor selector ownership to support both client_id and user_id, and repaired a malformed include path in vendors/module_action.run.php.
+- Hardened registration certificate and legacy profile image uploads with size, MIME and extension checks and random filenames.
+- Fixed legacy vendor form routing and mismatched document/financial form labels.
+- Fixed contacts lookup to use parameterized queries and return rows rather than an unbound query result.
+
+DATABASE
+Run in this order after backing up the database:
+1. includes/sql_tables/01_create_tables.sql (only if establishing a fresh database)
+2. includes/sql_tables/08_step13_vendor_org_hr_schema.sql
+3. includes/sql_tables/09_step14_authentication_hardening.sql
+4. includes/sql_tables/10_client_account_profile_messaging.sql
+5. includes/sql_tables/11_vendor_account_profile.sql
+
+The Step 16 migration adds missing public profile text/image columns and supporting indexes only when absent. It has not been executed against a live database in this environment.
+
+VERIFICATION
+- PHP syntax lint: 216/216 PHP files passed.
+- Static implementation checks: 17/17 passed.
+- Literal local links/assets checked in vendor pages, messaging pages, shared header and shared forms: 149 checked; 0 missing.
+- Vendor branch/shift/staff/HR pages guarded: 12/12.
+- Legacy vendor branch/shift/staff/HR mutation handlers guarded with POST+CSRF checks: 8/8.
+- ZIP integrity test passed after packaging.
+
+LIMITATIONS
+- No live MySQL/MariaDB connection or browser test environment was available; SQL execution, upload behavior, chat delivery and notification rendering still require staging tests.
+- Direct customer chat is limited to client/vendor pairs that already have at least one marketplace order. A broader public business discovery/messaging permission model was not introduced.
+- The work adds shared protections and fixes account/profile paths but is not a full penetration test or a complete functional audit of every HR/payroll/accounting workflow.

@@ -1,0 +1,165 @@
+/* Payslip Styling */
+
+#payslip-container {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+}
+
+.payslip-title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+    color: #333;
+}
+
+#payslip-container h4 {
+    text-align: center;
+    margin: 5px 0;
+    font-size: 14px;
+    color: #666;
+}
+
+#payslip-container h3 {
+    margin-top: 25px;
+    margin-bottom: 12px;
+    font-size: 16px;
+    color: #333;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 8px;
+}
+
+.payslip_tbl {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.payslip_tbl thead {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.payslip_tbl th {
+    padding: 12px;
+    text-align: left;
+    font-weight: bold;
+    border: 1px solid #ddd;
+}
+
+.payslip_tbl td {
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.payslip_tbl tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.payslip_tbl tbody tr:hover {
+    background-color: #f0f0f0;
+}
+
+.payslip_tbl th[colspan],
+.payslip_tbl td[colspan] {
+    text-align: right;
+    font-weight: bold;
+    background-color: #e9ecef;
+}
+
+/* Totals row styling */
+.payslip_tbl tr:last-child th {
+    background-color: #e9ecef;
+    border-top: 2px solid #007bff;
+}
+
+.payslip_tbl tr:last-child {
+    font-weight: bold;
+}
+
+/* Net Pay heading */
+#payslip-container h3:last-of-type {
+    text-align: right;
+    font-size: 18px;
+    margin-top: 30px;
+    color: #155724;
+}
+
+/* Print button styling */
+#printPayslipBtn {
+    display: block;
+    margin: 25px auto 0;
+    padding: 12px 30px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#printPayslipBtn:hover {
+    background-color: #0056b3;
+}
+
+#printPayslipBtn:active {
+    background-color: #004085;
+}
+
+/* Print-friendly styles */
+@media print {
+    #payslip-container {
+        box-shadow: none;
+        border: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    #printPayslipBtn {
+        display: none;
+    }
+
+    .payslip_tbl {
+        page-break-inside: avoid;
+    }
+
+    #payslip-container h3,
+    #payslip-container h4 {
+        page-break-after: avoid;
+    }
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+    #payslip-container {
+        padding: 10px;
+        margin: 10px;
+    }
+
+    .payslip_tbl {
+        font-size: 12px;
+    }
+
+    .payslip_tbl th,
+    .payslip_tbl td {
+        padding: 6px 8px;
+    }
+
+    .payslip-title {
+        font-size: 18px;
+    }
+
+    #payslip-container h4 {
+        font-size: 12px;
+    }
+}

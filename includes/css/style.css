@@ -1,0 +1,90 @@
+
+
+/* Page background and typography */
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #f5f7fa;
+  margin: 0;
+  padding: 40px;
+  color: #333;
+}
+
+/* Heading */
+h1 {
+  text-align: center;
+  color: #222;
+  margin-bottom: 30px;
+}
+
+/* Form container */
+#depositForm {
+  background: #fff;
+  padding: 25px 30px;
+  border-radius: 10px;
+  max-width: 600px;
+  margin: auto;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+/* Labels */
+#depositForm label {
+  display: block;
+  margin-top: 15px;
+  font-weight: 600;
+}
+
+/* Inputs and select */
+#depositForm input[type="text"],
+#depositForm select {
+  width: 100%;
+  padding: 12px;
+  margin-top: 6px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+}
+
+#depositForm input:focus,
+#depositForm select:focus {
+  border-color: #0078d7;
+  outline: none;
+}
+
+/* Buttons */
+#depositForm button {
+  margin-top: 20px;
+  padding: 12px 18px;
+  background: #0078d7;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+#depositForm button:hover {
+  background: #005a9e;
+}
+
+/* Search results */
+#searchResults {
+  margin-top: 12px;
+  padding: 10px;
+  background: #eef3f8;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #444;
+}
+
+/* Response area */
+#response {
+  margin-top: 25px;
+  padding: 15px;
+  background: #e9fbe9;
+  border: 1px solid #b6e2b6;
+  border-radius: 6px;
+  font-size: 14px;
+  text-align: center;
+}

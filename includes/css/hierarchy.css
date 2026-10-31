@@ -1,0 +1,82 @@
+/* --- Hierarchy wrapper --- */
+.hierarchy-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    font-family: Arial, sans-serif;
+}
+
+/* --- Headings --- */
+.hierarchy-wrapper h4 {
+    margin: 0 0 5px 0;
+    font-size: 1rem;
+    color: #333;
+}
+
+/* --- Generic button style --- */
+.btn {
+    padding: 6px 14px;
+    border: 1px solid #333;
+    background-color: #f0f0f0;
+    color: #333;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+/* Hover effect */
+.btn:hover {
+    background-color: #e0e0e0;
+}
+
+/* Active / Selected button */
+.btn.selected {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #0056b3;
+}
+
+/* Create new entity button */
+.btn.create {
+    background-color: #28a745;
+    color: #fff;
+    border-color: #218838;
+}
+
+.btn.create:hover {
+    background-color: #218838;
+}
+
+/* --- Forms inside hierarchy --- */
+.hierarchy-item form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+/* Branch, shift, staff lists */
+.hierarchy-item.branch-list,
+.hierarchy-item.shift-list,
+.hierarchy-item.staff-list,
+.hierarchy-item.vendor-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+/* Optional: smaller buttons for staff if many */
+.hierarchy-item.staff-list .btn {
+    font-size: 0.85rem;
+}
+
+/* Responsive behavior */
+@media (max-width: 600px) {
+    .hierarchy-wrapper {
+        gap: 10px;
+    }
+    .btn {
+        padding: 5px 10px;
+        font-size: 0.85rem;
+    }
+}

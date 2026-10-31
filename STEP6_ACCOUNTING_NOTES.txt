@@ -1,0 +1,15 @@
+CnrByte Step 6 — Marketplace Accounting and Financial Reconciliation
+
+Changes in this patch:
+- Standardised financial balance display/calculation by transaction type: deposits/income add; withdrawals/expenses subtract, regardless of historical amount sign.
+- Marketplace checkout debits now store negative signed withdrawal amounts for consistency with the financial transaction convention.
+- Order items now snapshot unit cost and total cost at checkout.
+- Added marketplace_accounting_entries as an order-linked operational subledger with gross sales, cost of goods sold, platform commission, vendor payable, and pending-settlement status.
+- Accounting entry creation occurs during checkout's existing database transaction; failure should cause checkout rollback.
+- Commission is recorded as zero because this codebase has no configured commission policy. Vendor payable is gross sales until a commission policy is implemented.
+
+Limitations / follow-up:
+- This is not a full double-entry general ledger and does not yet post journals into financial_transactions.
+- Existing historical order items get zero for newly added unit_cost/cost_total columns; they are not backfilled because historical cost at sale time cannot be reliably inferred.
+- Refunds/cancellations, payout execution, settlement reconciliation, tax/VAT, and commission configuration remain future work.
+- Test with a staging database before production use.

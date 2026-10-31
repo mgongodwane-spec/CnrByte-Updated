@@ -1,0 +1,51 @@
+/* --- Menu Container --- */
+.menu-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 15px 0;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+/* --- Heading --- */
+.menu-heading {
+    width: 100%;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #2c2c2c;
+}
+
+/* --- Form Layout --- */
+.menu-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* --- Button Styling --- */
+.menu-btn {
+    padding: 8px 16px;
+    background-color: #f4f4f4;
+    border: 1px solid #bbb;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* --- Hover Effect --- */
+.menu-btn:hover {
+    background-color: #e2e2e2;
+    border-color: #888;
+}
+
+/* --- Responsive --- */
+@media (max-width: 600px) {
+    .menu-btn {
+        font-size: 0.85rem;
+        padding: 6px 12px;
+    }
+}

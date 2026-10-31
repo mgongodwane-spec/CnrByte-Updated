@@ -1,0 +1,12 @@
+<?php
+declare(strict_types=1);
+require_once __DIR__ . '/../includes/session.run.php';
+require_once __DIR__ . '/../includes/conn.dbh.php';
+require_once __DIR__ . '/../includes/auth_helpers.php';
+if(($_SERVER['REQUEST_METHOD']??'GET')!=='POST'||empty($_SESSION['user_info']['id'])){http_response_code(403);exit('Not authorised.');}
+if(!cnrbyte_auth_csrf_valid($_POST['csrf_token']??null)){http_response_code(403);exit('Invalid or expired form token.');}
+$clientId=(int)$_SESSION['user_info']['id'];$vendorId=filter_var($_POST['vendor_id']??null,FILTER_VALIDATE_INT);$body=trim((string)($_POST['body']??''));$subject=trim((string)($_POST['subject']??'Business enquiry'));
+if(!$vendorId||$vendorId<1||$body===''||mb_strlen($body)>5000||mb_strlen($subject)>180){$_SESSION['direct_chat_error']='Select a business and enter a message of up to 5,000 characters.';header('Location: /cnrbyte/messages/chat.pge.php');exit;}
+$stmt=$conn->prepare('SELECT v.id,v.reg_name FROM vendors v WHERE v.id=? AND EXISTS (SELECT 1 FROM marketplace_orders mo WHERE mo.vendor_id=v.id AND mo.buyer_id=?) LIMIT 1');$stmt->bind_param('ii',$vendorId,$clientId);$stmt->execute();$vendor=$stmt->get_result()->fetch_assoc();$stmt->close();if(!$vendor){http_response_code(403);exit('You can directly message businesses linked to your orders.');}
+$key='direct:v'.$vendorId.':c'.$clientId;$senderType='client';$recipientType='vendor';$conn->begin_transaction();try{$stmt=$conn->prepare('INSERT INTO cnrbyte_messages (conversation_key,sender_type,sender_id,recipient_type,recipient_id,subject,body) VALUES (?,?,?,?,?,?,?)');$stmt->bind_param('ssissss',$key,$senderType,$clientId,$recipientType,$vendorId,$subject,$body);$stmt->execute();$stmt->close();$title='New customer message';$note='A customer sent your business a direct message.';$target='/cnrbyte/messages/vendor_chat.pge.php?client_id='.$clientId;$kind='message';$stmt=$conn->prepare('INSERT INTO cnrbyte_notifications (recipient_type,recipient_id,notification_type,title,message,target_url) VALUES (?,?,?,?,?,?)');$stmt->bind_param('sissss',$recipientType,$vendorId,$kind,$title,$note,$target);$stmt->execute();$stmt->close();$conn->commit();}catch(Throwable $e){try{$conn->rollback();}catch(Throwable $ignored){}error_log('CnrByte client-to-vendor direct message failed: '.$e->getMessage());$_SESSION['direct_chat_error']='The message could not be sent. Please try again.';}
+header('Location: /cnrbyte/messages/chat.pge.php?vendor_id='.$vendorId);exit;

@@ -1,0 +1,91 @@
+CNRBYTE STEP 13 — VENDOR/HR MODULE REPAIR AND SCHEMA ALIGNMENT
+================================================================
+
+Baseline: the uploaded cnrbyte_step12_protected_refunds_settlement_ui.zip.
+
+WHAT CHANGED
+------------
+1. Added the Step 13 schema migration:
+   includes/sql_tables/08_step13_vendor_org_hr_schema.sql
+   It adds/aligns vendor fields, legacy lookup/compatibility tables, staff
+   qualifications, leave, draft payroll items, message/notification tables,
+   the cart compatibility table, and marketplace accounting/order columns.
+2. Added missing bootstrap entry points:
+   includes/global.dbh.php, includes/global.shw.php, includes/header.php,
+   includes/hierarchy.shw.php, includes/form_menu.shw.php,
+   includes/selected_form.shw.php, includes/select.run.php.
+3. Filled previously empty module helper files for branches, shifts, staff,
+   and HR.
+4. Added working role-scoped branch, shift, staff, roster, leave, rate,
+   qualification and draft payroll-item forms and action handling.
+5. Added vendor dashboard overview cards and branch/shift/staff directory
+   pages.
+6. Added order-linked client/vendor messaging and notification history under
+   messages/dashboard.pge.php. Message access is limited to marketplace orders
+   the current user is a party to. Sending a message creates a notification.
+   Refund/settlement service functions now also attempt to create notifications.
+7. Added a shared responsive CSS layer and compatibility stylesheets for the
+   legacy CSS names used across pages.
+8. Repaired broken internal paths to the nested cart, QR-code, vendor, staff,
+   banking and quotation pages; normalised legacy PHP includes to the
+   /cnrbyte/includes path.
+9. Added compatibility files for legacy company-product creation.
+10. Corrected the misplaced strict_types declaration in vendors/forms.run.php.
+
+DATABASE INSTALLATION
+---------------------
+1. Back up the current database and files.
+2. Test on a staging copy first.
+3. If this is a new database, import includes/sql_tables/01_create_tables.sql.
+4. Apply migrations in order:
+   - includes/sql_tables/06_step9_10_inventory_general_ledger.sql
+   - includes/sql_tables/07_step11_refunds_settlement.sql
+   - includes/sql_tables/08_step13_vendor_org_hr_schema.sql
+5. Check existing vendor approval statuses after migration. Legacy vendors
+   receive user_id=client_id where user_id was absent; review status values
+   before enabling marketplace selling.
+6. The SQL uses INFORMATION_SCHEMA and PREPARE statements and targets MySQL/
+   MariaDB. Verify compatibility with the exact deployed server version.
+7. Confirm uploads/staff/qualifications is not directly web-readable. The
+   included .htaccess protects it on Apache; Nginx needs an equivalent rule.
+
+SECURITY / ACCOUNTING NOTES
+---------------------------
+- Module actions require an authenticated client-owned vendor context and a
+  valid CSRF token, and verify branch/shift/staff ownership before writes.
+- New roster and payroll entries are not automatically approved or paid.
+- The payroll item form saves draft earnings/deductions only. It does NOT
+  calculate South African statutory payroll, generate compliant payslips,
+  make payments, or post payroll to the general ledger.
+- The messaging UI supports order-linked conversations; it does not yet
+  provide unrestricted directory-based chat unrelated to an order.
+- Legacy `messages` is retained for older modules; new order-linked messages
+  use `cnrbyte_messages`, and new notifications use `cnrbyte_notifications`.
+- Internal marketplace refunds and settlement records retain Step 11's limits:
+  refund records do not move money back to an external card/bank; settlement
+  records document an external payout that must already have occurred.
+- GAAP/IFRS-aligned full financial statements and consolidated branch reporting
+  have not been certified or fully implemented by this checkpoint.
+- Do not treat this ZIP as production-ready until staging database tests,
+  browser tests, access-control tests and end-to-end financial reconciliations
+  pass.
+
+VERIFICATION PERFORMED
+----------------------
+- PHP syntax: all 200 PHP files passed `php -l`.
+- Empty PHP files: 0 remaining.
+- Static CSS reference scan: 0 missing local CSS files.
+- Static local PHP include scan: 0 missing include targets detected.
+- Static absolute local href/src/action scan: 0 missing targets detected,
+  excluding one generated QR image path whose filename is dynamic.
+- Static relative form-action scan: 0 missing targets detected.
+- ZIP integrity check is run when packaging this checkpoint.
+
+NOT PERFORMED
+-------------
+- No MySQL/MariaDB server was available in this environment, so migration
+  execution and schema compatibility could not be verified against a live DB.
+- No authenticated browser session, file upload, marketplace checkout, payroll
+  run, refund, settlement or accounting period was exercised end-to-end.
+- PHP syntax and static link checks do not establish business correctness or
+  production security.

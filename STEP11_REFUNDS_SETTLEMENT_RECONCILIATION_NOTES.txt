@@ -1,0 +1,40 @@
+CnrByte Step 11 — Refunds, Cancellations and Vendor Settlement Reconciliation
+
+Based on: Step 9–10 inventory and general-ledger checkpoint.
+
+Added:
+- includes/accounting/marketplace_lifecycle.php: reusable transaction-based lifecycle service functions.
+- includes/sql_tables/07_step11_refunds_settlement.sql: idempotency and audit tables.
+- includes/accounting/general_ledger.php: vendor-specific account code 1000 (Bank / Payout Clearing) used by settlement journals.
+
+Functions:
+- marketplace_lifecycle_ensure_tables($conn)
+- marketplace_cancel_and_refund($conn, $orderId, $actorId, $isAdministrator, $reason)
+- marketplace_record_vendor_settlement($conn, $orderId, $actorId, $externalPaymentReference)
+- marketplace_settlement_reconciliation($conn, $vendorId)
+
+Refund/cancellation behaviour:
+- Only paid orders that are still pending packaging and have no tracking code are eligible for automatic cancellation.
+- The service checks buyer ownership unless the caller has already authenticated administrator authority.
+- It records one refund per order, credits an internal CnrByte financial account, restores stock, adds inventory movements, posts a balanced reversing journal, marks the original journal reversed, marks the order cancelled, updates the marketplace accounting entry, and writes an audit event.
+- All database mutations are in one transaction. Failures roll back.
+- This is an internal CnrByte account credit, NOT an external card/bank refund. Exact source-account allocation is not available in the legacy payment records; the refund is credited to the first eligible account in the same broad payment category.
+
+Settlement behaviour:
+- Records a full vendor payout only after the external payment has actually been made.
+- Requires an external payment reference and prevents duplicate settlement per order or duplicate reference.
+- Posts a balanced journal debiting Bank / Payout Clearing and crediting Marketplace Clearing Receivable.
+- Marks the accounting record settled and adds an audit event in the same transaction.
+- It does NOT execute a bank transfer. The administrator must independently verify the payment before recording it.
+- Partial settlements are not supported in this checkpoint.
+
+Security integration required before exposing actions:
+- Any controller/UI calling these functions MUST enforce authentication, role/permission checks, buyer ownership for buyer cancellation, CSRF token validation for POST requests, and vendor-scoped access to reconciliation output.
+- The service functions are backend building blocks, not a finished protected UI.
+
+Database/testing notes:
+- Run the migration on a staging copy first.
+- Tables must use InnoDB for rollback semantics.
+- Test paid/unshipped eligible orders, shipped/ineligible orders, duplicate refund attempts, missing buyer accounts, insufficient/duplicate settlement references, and concurrent requests.
+- Verify product.units opening stock before enabling sales; earlier migration defaults missing stock to zero.
+- Historical refunds/payouts are not fabricated or backfilled.

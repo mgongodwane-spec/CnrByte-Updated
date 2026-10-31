@@ -1,0 +1,248 @@
+/* forms.css
+   Unified form styles for the site. Works with ../css/main.css.
+   Provides consistent form cards, inputs, buttons, messages, header/back button helpers,
+   and mobile-friendly stacked table behavior.
+*/
+
+/* ---------- Form container ---------- */
+.user_form {
+  background: #fff;
+  width: 92%;
+  max-width: 560px;
+  margin: 1rem auto;
+  padding: 1.25rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(2,6,23,0.06);
+  border: 1px solid #eef2f7;
+}
+
+/* Title inside form */
+.form-title {
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+  text-align: center;
+  color: #1e3a8a;
+  font-weight: 700;
+}
+
+/* ---------- Form layout ---------- */
+.input_form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+/* Card style wrapper for grouped inputs */
+.form-card {
+  background: #f9fafb;
+  border: 1px solid #e6e9ef;
+  border-radius: 8px;
+  padding: 0.75rem 0.9rem;
+  box-shadow: 0 1px 4px rgba(2,6,23,0.03);
+}
+
+/* Labels and inputs */
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+  color: #374151;
+  font-size: 0.95rem;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="file"],
+input[type="number"],
+select,
+textarea {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  background: #fff;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #2563eb;
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(37,99,235,0.08);
+}
+
+/* Inline small helpers */
+.input-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.input-row > * { flex: 1 1 auto; }
+
+/* ---------- Buttons ---------- */
+.form-btn {
+  margin-top: 0.5rem;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 8px;
+  background: #0ade5b;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.22s ease, transform 0.06s ease;
+  display: inline-block;
+}
+
+.form-btn:hover { background: #0bb84f; transform: translateY(-1px); }
+.form-btn.secondary {
+  background: #1e3a8a;
+}
+.form-btn.ghost {
+  background: transparent;
+  color: #1e3a8a;
+  border: 1px solid #e6e9ef;
+}
+
+/* Small action buttons inside tables or lists */
+.small-btn {
+  padding: 0.45rem 0.6rem;
+  border-radius: 6px;
+  border: none;
+  background: #1e3a8a;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+/* ---------- Messages ---------- */
+.error-msg, .success-msg {
+  width: 92%;
+  max-width: 560px;
+  margin: 0.5rem auto;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.error-msg {
+  background: #fff5f5;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+.success-msg {
+  background: #f0fdf4;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+/* ---------- File input small note ---------- */
+.file-note {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+/* ---------- Table fallback for small screens (roster/profile) ---------- */
+.roster_tbl {
+  border-collapse: collapse;
+  width: 100%;
+  font-family: inherit;
+}
+
+.roster_tbl th,
+.roster_tbl td {
+  border: 1px solid #eef2f7;
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  vertical-align: middle;
+}
+
+/* Mobile stacked table */
+@media (max-width: 600px) {
+  .user_form { width: 96%; padding: 1rem; }
+  .form-btn { width: 100%; font-size: 1rem; }
+
+  .roster_tbl,
+  .roster_tbl thead,
+  .roster_tbl tbody,
+  .roster_tbl th,
+  .roster_tbl td,
+  .roster_tbl tr {
+    display: block;
+    width: 100%;
+  }
+
+  .roster_tbl tr {
+    margin-bottom: 0.9rem;
+    border: 1px solid #e6e9ef;
+    border-radius: 8px;
+    padding: 0.6rem;
+    background: #fff;
+  }
+
+  .roster_tbl th {
+    display: block;
+    font-weight: 700;
+    color: #0f172a;
+    padding: 0.25rem 0;
+    background: transparent;
+  }
+
+  .roster_tbl td {
+    display: block;
+    padding: 0.25rem 0;
+  }
+}
+
+/* ---------- Header & Back button helpers (used on signup_login page) ---------- */
+.page-header {
+  max-width: 1100px;
+  margin: 1rem auto;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.page-header .brand {
+  font-size: 1.25rem;
+  color: #1e3a8a;
+  font-weight: 800;
+}
+
+.page-header .back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.6rem;
+  border-radius: 8px;
+  background: #f1f5f9;
+  color: #0f172a;
+  text-decoration: none;
+  border: 1px solid #e6e9ef;
+  font-weight: 600;
+}
+
+.page-header .back-link:hover {
+  background: #e6eefc;
+  color: #0f172a;
+}
+
+/* ---------- Accessibility focus ---------- */
+.form-btn:focus,
+.small-btn:focus,
+.back-link:focus {
+  outline: 3px solid rgba(37,99,235,0.18);
+  outline-offset: 2px;
+}
+
+/* ---------- Utilities ---------- */
+.hidden { display: none !important; }
+.muted { color: #6b7280; font-size: 0.95rem; }
+.center { display:flex; justify-content:center; align-items:center; }

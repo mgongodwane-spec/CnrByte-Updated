@@ -1,0 +1,20 @@
+CnrByte Step 12 — Protected Marketplace Lifecycle UI
+
+Added:
+- admin/marketplace_lifecycle.pge.php: administrator-only order search, refund/cancellation controls, settlement recording, reconciliation summary, and use of the existing Step 11 lifecycle service functions.
+- admin/dashboard.pge.php: administrator-only navigation link to the new page.
+
+Security:
+- The page requires the existing session and database bootstrap files.
+- Only $_SESSION['user_info']['rank'] === 'admin' is permitted.
+- Mutating POST requests require a session CSRF token checked with hash_equals.
+- Database queries for order filters and service calls use prepared statements.
+- Do not expose the underlying service functions through a public endpoint.
+
+Financial limitations:
+- Refund is an internal account credit, not an external bank/card refund.
+- Settlement records a completed external payout; it does not send money.
+- Current reconciliation summary covers vendors in the current filtered order results only, up to the latest 150 orders.
+- Existing Step 11 lifecycle limitations remain. Validate the database schema and run staging tests before production use.
+
+Validation performed for this checkpoint: PHP syntax checks and ZIP integrity check. No live DB, browser, or end-to-end transaction tests were possible in this environment.

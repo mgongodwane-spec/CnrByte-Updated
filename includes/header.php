@@ -1,0 +1,5 @@
+<?php
+declare(strict_types=1);
+require_once __DIR__ . '/session.run.php';
+require_once __DIR__ . '/conn.dbh.php';
+require_once __DIR__ . '/show/header.php';

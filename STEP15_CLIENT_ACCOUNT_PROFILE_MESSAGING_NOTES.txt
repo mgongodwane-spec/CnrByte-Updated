@@ -1,0 +1,22 @@
+CnrByte Step 15 — Client Account, Profile and Messaging
+
+Implemented:
+- Added authenticated client profile page with username/email/mobile and physical/postal address fields.
+- Added POST-only CSRF-protected profile update endpoint. It uses prepared statements, validates field lengths/email, checks duplicate username/email, and transactionally updates clients + profiles.
+- Added prominent dashboard links for profile/settings, messages/notifications and direct chats.
+- Added profile link to shared client navigation; all new pages use the shared CnrByte header and /cnrbyte/css/cnrbyte-modules.css.
+- Rebuilt direct chat page to use saved contacts, escape rendered values, mark incoming messages read and show/send replies.
+- Rebuilt direct-message handler to require authenticated POST + CSRF, verify contact ownership from the database, insert messages in the existing messages table and add in-app notifications when the notification table is present.
+- Added SQL migration with supporting indexes for client profiles, saved contacts and direct messages.
+
+Deployment:
+1. Back up the database and deploy the Step 15 ZIP.
+2. Run includes/sql_tables/10_client_account_profile_messaging.sql after prior migrations.
+3. Test profile updates with a client account, including duplicate username/email, blank/invalid fields and long inputs.
+4. Test two client accounts: save contact, send message, receive notification, reply, and verify unread status changes.
+5. Test order-linked client/vendor conversations through messages/dashboard.pge.php; this continues to use the Step 13 cnrbyte_messages schema.
+
+Limitations:
+- No live MySQL/MariaDB instance was available in this environment; migration and live query execution were not run.
+- Browser end-to-end tests were not available. PHP lint/static checks are performed separately.
+- Existing direct contacts are client-to-client. Client/vendor conversations remain order-linked in the messages dashboard.

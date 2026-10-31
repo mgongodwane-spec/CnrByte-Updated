@@ -1,0 +1,221 @@
+
+
+/* ../financial/portfolio.css
+   Portfolio-specific styles: accordion, asset items, compact holdings table,
+   and mobile stacked-table behavior. Designed to work with ../css/main.css.
+*/
+
+/* Container */
+.portfolio-wrap {
+  max-width: 1100px;
+  margin: 1.25rem auto;
+  padding: 0 1rem;
+}
+
+/* Accordion */
+.accordion {
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(16,24,40,0.04);
+  border: 1px solid #e6e9ef;
+}
+
+.accordion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  user-select: none;
+  background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+}
+
+.accordion-header h4 {
+  margin: 0;
+  font-size: 1rem;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.accordion-meta {
+  font-size: 0.9rem;
+  color: #475569;
+}
+
+.accordion-toggle {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #f1f5f9;
+  color: #0f172a;
+  transition: transform 0.22s ease;
+}
+
+/* Open state toggles */
+.accordion.open .accordion-toggle {
+  transform: rotate(180deg);
+}
+
+/* Body */
+.accordion-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.28s ease, padding 0.28s ease;
+  padding: 0 1rem;
+  background: #fff;
+}
+
+.accordion.open .accordion-body {
+  padding: 0.75rem 1rem 1rem 1rem;
+  max-height: 1200px;
+}
+
+/* Asset list */
+.asset-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.asset-item {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.6rem;
+  border-radius: 8px;
+  background: #f8fafc;
+  border: 1px solid #eef2f7;
+}
+
+.asset-info {
+  flex: 1 1 auto;
+}
+
+.asset-title {
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.25rem;
+}
+
+.asset-sub {
+  font-size: 0.9rem;
+  color: #475569;
+}
+
+/* Badges */
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #fff;
+  background: #0ade5b;
+}
+
+/* Actions */
+.asset-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.action-btn {
+  padding: 0.45rem 0.6rem;
+  border-radius: 6px;
+  border: none;
+  background: #1e3a8a;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.action-secondary {
+  background: #6b7280;
+}
+
+/* Portfolio table */
+.portfolio-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.75rem;
+}
+
+.portfolio-table th,
+.portfolio-table td {
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #eef2f7;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.portfolio-table th {
+  background: #fbfdff;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+/* Profit/Loss */
+.pl-positive { color: #16a34a; font-weight:700; }
+.pl-negative { color: #dc2626; font-weight:700; }
+
+/* Compact view */
+.asset-compact .asset-item {
+  padding: 0.45rem;
+  background: transparent;
+  border: none;
+}
+
+/* Focus states */
+.accordion-header:focus,
+.action-btn:focus {
+  outline: 3px solid rgba(37,99,235,0.18);
+  outline-offset: 2px;
+}
+
+/* Mobile stacked table and accordion adjustments */
+@media (max-width: 768px) {
+  .portfolio-wrap { padding: 0.5rem; }
+
+  .accordion-header { padding: 1rem; }
+
+  .portfolio-table, .portfolio-table thead, .portfolio-table tbody, .portfolio-table th, .portfolio-table td, .portfolio-table tr {
+    display: block;
+    width: 100%;
+  }
+  .portfolio-table thead { display: none; }
+  .portfolio-table tr {
+    margin-bottom: 0.75rem;
+    border-radius: 8px;
+    background: #fff;
+    padding: 0.6rem;
+    box-shadow: 0 1px 4px rgba(2,6,23,0.04);
+    border: 1px solid #eef2f7;
+  }
+  .portfolio-table td {
+    border: none;
+    padding: 0.5rem 0;
+  }
+  .portfolio-table td::before {
+    content: attr(data-label);
+    display: block;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 0.25rem;
+  }
+
+  .asset-item { flex-direction: column; align-items: flex-start; gap: 0.5rem; padding: 0.75rem; }
+  .asset-actions { width: 100%; justify-content: flex-start; gap: 0.5rem; }
+}
+
+/* Utilities */
+.hidden { display: none !important; }
+.flex { display: flex; }
+.center { justify-content: center; align-items: center; }
+.muted { color: #6b7280; font-size: 0.95rem; }

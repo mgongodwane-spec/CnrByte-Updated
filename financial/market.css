@@ -1,0 +1,161 @@
+/* ../financial/market.css
+   Market page styles: listings grid, asset cards, orders table,
+   quick order form, responsive stacked-table fallback.
+   Works with ../css/main.css (no inline styles required).
+*/
+
+/* ---------- Wrapper ---------- */
+.market-wrap {
+  max-width: 1100px;
+  margin: 1.25rem auto;
+  padding: 0 1rem;
+}
+
+/* ---------- Listings grid ---------- */
+.listings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+/* ---------- Asset card ---------- */
+.asset-card {
+  background: #fff;
+  border: 1px solid #e6e9ef;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(16,24,40,0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.asset-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.asset-title {
+  font-size: 1.05rem;
+  color: #0f172a;
+  margin: 0;
+  font-weight: 700;
+}
+
+.asset-sub {
+  color: #475569;
+  font-size: 0.95rem;
+}
+
+.asset-meta { color: #6b7280; font-size: 0.9rem; }
+
+/* badge */
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 999px;
+  background: #0ade5b;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+/* orders table */
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+  background: transparent;
+}
+
+.orders-table thead th {
+  text-align: left;
+  padding: 0.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  background: #fbfdff;
+  border-bottom: 1px solid #eef2f7;
+}
+
+.orders-table tbody td {
+  padding: 0.5rem;
+  border-bottom: 1px solid #f3f4f6;
+  color: #0f172a;
+  font-size: 0.95rem;
+}
+
+/* action area */
+.asset-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-start;
+  margin-top: 0.5rem;
+}
+
+/* quick order form */
+.quick-order {
+  margin-top: 1.25rem;
+  background: #fff;
+  border: 1px solid #e6e9ef;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(16,24,40,0.04);
+}
+
+/* small form tweaks */
+.quick-order .form-card { margin-bottom: 0.5rem; }
+
+/* buttons reuse .form-btn from main.css; ensure consistent spacing */
+.form-btn { margin-right: 0.5rem; }
+
+/* ---------- Responsive: stacked table fallback ---------- */
+@media (max-width: 768px) {
+  .listings-grid { grid-template-columns: 1fr; }
+
+  /* collapse orders table into stacked cards */
+  .orders-table, .orders-table thead, .orders-table tbody, .orders-table th, .orders-table td, .orders-table tr {
+    display: block;
+    width: 100%;
+  }
+  .orders-table thead { display: none; }
+  .orders-table tr {
+    margin-bottom: 0.6rem;
+    border-radius: 8px;
+    background: #fff;
+    padding: 0.6rem;
+    box-shadow: 0 1px 4px rgba(2,6,23,0.04);
+    border: 1px solid #eef2f7;
+  }
+  .orders-table td {
+    border: none;
+    padding: 0.45rem 0;
+  }
+  .orders-table td::before {
+    content: attr(data-label);
+    display: block;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 0.25rem;
+  }
+
+  /* stack asset actions */
+  .asset-actions { flex-direction: column; align-items: stretch; }
+  .asset-actions .form-btn { width: 100%; margin-right: 0; }
+}
+
+/* ---------- Accessibility & focus ---------- */
+.asset-card:focus-within,
+.asset-card:hover {
+  box-shadow: 0 6px 18px rgba(16,24,40,0.06);
+  transform: translateY(-2px);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.asset-card:focus-within { outline: 3px solid rgba(37,99,235,0.12); outline-offset: 2px; }
+
+/* ---------- Utilities ---------- */
+.muted { color: #6b7280; font-size: 0.95rem; }
+.hidden { display: none !important; }

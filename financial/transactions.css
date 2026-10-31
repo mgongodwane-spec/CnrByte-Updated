@@ -1,0 +1,218 @@
+/* ../financial/transaction.css
+   Transaction ledger styles for the financial marketplace.
+   Works with ../css/main.css and ../financial/portfolio.css.
+   Provides desktop table layout, mobile stacked-card fallback, filters, and visual affordances.
+*/
+
+/* ---------- Container ---------- */
+.transactions-wrap {
+  max-width: 1100px;
+  margin: 1.25rem auto;
+  padding: 0 1rem;
+}
+
+/* ---------- Header / Controls ---------- */
+.tx-controls {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.tx-controls .left,
+.tx-controls .right {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.tx-search {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #e6e9ef;
+  border-radius: 8px;
+  background: #fff;
+  min-width: 220px;
+}
+
+.tx-filter {
+  padding: 0.45rem 0.6rem;
+  border-radius: 8px;
+  border: 1px solid #e6e9ef;
+  background: #fff;
+  cursor: pointer;
+}
+
+/* small action buttons */
+.tx-btn {
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  border: none;
+  background: #1e3a8a;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* secondary */
+.tx-btn.secondary {
+  background: #6b7280;
+}
+
+/* ---------- Ledger table (desktop) ---------- */
+.ledger-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(16,24,40,0.04);
+}
+
+.ledger-table thead th {
+  background: #fbfdff;
+  color: #0f172a;
+  font-weight: 700;
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #eef2f7;
+}
+
+.ledger-table tbody td {
+  padding: 0.65rem 0.75rem;
+  border-bottom: 1px solid #f3f4f6;
+  vertical-align: middle;
+  color: #0f172a;
+  font-size: 0.95rem;
+}
+
+/* last row border removal */
+.ledger-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* narrow columns */
+.col-date { width: 160px; }
+.col-asset { width: 220px; }
+.col-action { width: 90px; text-transform: capitalize; }
+.col-shares { width: 100px; text-align: right; }
+.col-price, .col-total, .col-pl { width: 120px; text-align: right; }
+.col-note { width: 1fr; }
+
+/* Profit / Loss styling */
+.tx-pl-positive { color: #16a34a; font-weight: 700; }
+.tx-pl-negative { color: #dc2626; font-weight: 700; }
+.tx-pl-neutral { color: #6b7280; }
+
+/* Row hover */
+.ledger-table tbody tr:hover {
+  background: linear-gradient(90deg, rgba(37,99,235,0.03), rgba(255,255,255,0));
+}
+
+/* ---------- Compact list view (for filters or export preview) ---------- */
+.tx-compact {
+  display: grid;
+  gap: 0.5rem;
+}
+
+/* ---------- Empty state ---------- */
+.tx-empty {
+  padding: 1.25rem;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px dashed #e6e9ef;
+  color: #475569;
+  text-align: center;
+}
+
+/* ---------- Pagination (simple) ---------- */
+.tx-pagination {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.tx-page {
+  padding: 0.45rem 0.65rem;
+  border-radius: 6px;
+  border: 1px solid #e6e9ef;
+  background: #fff;
+  cursor: pointer;
+}
+
+/* active page */
+.tx-page.active {
+  background: #1e3a8a;
+  color: #fff;
+  border-color: #1e3a8a;
+}
+
+/* ---------- Mobile: stacked-card fallback ---------- */
+@media (max-width: 768px) {
+  .tx-controls { gap: 0.5rem; }
+
+  .ledger-table, .ledger-table thead, .ledger-table tbody, .ledger-table th, .ledger-table td, .ledger-table tr {
+    display: block;
+    width: 100%;
+  }
+
+  .ledger-table thead { display: none; }
+
+  .ledger-table tr {
+    margin-bottom: 0.75rem;
+    border-radius: 8px;
+    background: #fff;
+    padding: 0.75rem;
+    box-shadow: 0 1px 4px rgba(2,6,23,0.04);
+    border: 1px solid #eef2f7;
+  }
+
+  .ledger-table td {
+    border: none;
+    padding: 0.45rem 0;
+    display: block;
+  }
+
+  .ledger-table td::before {
+    content: attr(data-label);
+    display: block;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 0.25rem;
+  }
+
+  /* align numeric values to right within stacked card */
+  .ledger-table td[data-label="Shares"],
+  .ledger-table td[data-label="Price"],
+  .ledger-table td[data-label="Total"],
+  .ledger-table td[data-label="Realized P/L"] {
+    text-align: right;
+  }
+
+  /* compact controls */
+  .tx-controls .right { width: 100%; justify-content: flex-end; }
+}
+
+/* ---------- Accessibility and focus ---------- */
+.ledger-table a:focus,
+.tx-btn:focus,
+.tx-page:focus {
+  outline: 3px solid rgba(37,99,235,0.18);
+  outline-offset: 2px;
+}
+
+/* ---------- Utility helpers ---------- */
+.hidden { display: none !important; }
+.muted { color: #6b7280; font-size: 0.95rem; }
+.small { font-size: 0.85rem; color: #475569; }
+.center { display: flex; justify-content: center; align-items: center; }
+
+/* ---------- Export / CSV hint ---------- */
+.tx-export-hint {
+  font-size: 0.85rem;
+  color: #475569;
+  margin-left: 0.5rem;
+}

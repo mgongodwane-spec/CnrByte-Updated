@@ -1,0 +1,38 @@
+CnrByte Step 14 — Signup, Login, Logout, and Password Reset Hardening
+
+BASELINE
+This checkpoint is based on the Step 13 vendor/HR schema-alignment ZIP.
+
+CHANGES
+- Public signup always creates rank=client. Email addresses can no longer grant admin rights.
+- Signup validates CSRF, username format/length, email syntax, password confirmation, password length, and field lengths on the server.
+- Passwords are hashed with password_hash; login verifies with password_verify and rehashes outdated hashes.
+- Login accepts username or email, uses generic credential errors, applies database-backed throttling, regenerates the session ID, rotates CSRF, and standardizes legacy session keys.
+- Post-login routing sends admins to the admin dashboard, client accounts with one vendor to that vendor workspace, accounts with multiple vendors to a vendor selector, and other clients to the client dashboard.
+- Vendor selection re-checks account ownership on the server and requires CSRF.
+- Logout is POST-only and validates CSRF.
+- Signup errors and success messages are HTML-escaped and displayed.
+- Added a password-reset workflow with random one-time tokens, hashed token storage, one-hour expiry, single-use enforcement, generic public responses, and password hashing.
+- Removed the non-functional profile image upload field from public signup rather than accepting a file that was never processed.
+- Added CLI-only tools/provision_admin.php for controlled administrator provisioning of an existing account.
+- Added SQL migration 09_step14_authentication_hardening.sql for throttling and password-reset tables and conditional normalized-email uniqueness enforcement using a generated column.
+- Admin dashboard access now requires rank=admin; compatibility session key user_rank is set on login for older admin handlers.
+- Corrected the known login_signup.pge.php route typo and changed session cookies to host-only cookies by omitting the Domain attribute.
+
+REQUIRED DEPLOYMENT STEPS
+1. Back up the database and apply includes/sql_tables/09_step14_authentication_hardening.sql to staging.
+2. Inspect the duplicate-email query output. Resolve duplicate normalized email addresses after verifying ownership. Re-run the migration after cleanup; confirm uq_clients_email_normalized exists.
+3. Configure CNRBYTE_AUTH_PEPPER to a long, random secret that is kept outside the web root.
+4. Configure CNRBYTE_BASE_URL to the exact canonical deployment URL (for example, https://your-domain.example/cnrbyte) and CNRBYTE_MAIL_FROM to a valid sender address.
+5. Configure and test the server's PHP mail transport. Password-reset requests intentionally use a generic response even if delivery fails; check server logs during setup.
+6. To promote an existing account to administrator, run from a trusted shell: php tools/provision_admin.php <existing-username>. This file returns 404 outside CLI. Never expose administrator provisioning as public signup.
+7. Test with staging accounts: client, single-vendor owner, multi-vendor owner, administrator, wrong password, mismatched passwords, duplicate username/email, invalid CSRF, throttled attempts, expired/used reset token, and unauthorized vendor selection.
+8. Use HTTPS in production. Confirm PHP session cookies are Secure on HTTPS requests and that reverse-proxy HTTPS detection is configured correctly.
+
+LIMITATIONS / NOT CLAIMED
+- No live MySQL/MariaDB database was available, so the migration has not been executed against a real database.
+- No SMTP/mail delivery or browser end-to-end tests were run here.
+- Password-reset email delivery depends on the server's configured PHP mail transport.
+- This application does not maintain a server-side session registry, so changing a password cannot revoke every other already-issued session. Consider a session-version column or server-side session store for global session invalidation.
+- The conditional email-index migration will not create uq_clients_email while normalized duplicate addresses exist. Resolve them manually and re-run the migration.
+- If the vendors migration has not been applied, post-login vendor routing falls back to the client dashboard and logs the routing error.

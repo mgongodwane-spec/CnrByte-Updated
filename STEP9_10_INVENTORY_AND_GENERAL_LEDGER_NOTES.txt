@@ -1,0 +1,17 @@
+CnrByte Steps 9 and 10 — Inventory Reconciliation and General Ledger Foundation
+
+Implemented in this checkpoint:
+- Adds a products.units compatibility bootstrap for databases missing the stock column. Existing products default to zero stock and must be reconciled before sales.
+- Creates inventory_movements and records a signed sale movement inside the same checkout transaction as the stock decrement.
+- Creates a vendor-scoped chart of accounts, journal headers and journal lines.
+- Posts marketplace order journals once per order: Dr Marketplace Clearing Receivable / Cr Sales Revenue; Dr Cost of Goods Sold / Cr Inventory.
+- Checks journal debits equal credits before checkout can commit.
+- Adds accounting_marketplace_reconciliation() for comparing order sales, subledger sales, ledger sales, units sold and inventory cost relieved by vendor/date range.
+- Adds an SQL migration file for staging/manual deployment.
+
+Important accounting scope:
+- The ledger is vendor-scoped and treats the marketplace clearing account as receivable from the platform. Platform-level vendor payable remains in marketplace_accounting_entries and is not merged into the vendor books.
+- This is a foundation, not a complete GAAP/IFRS implementation. Tax/VAT, returns/refunds, payout entries, opening balances, locked accounting periods, approval workflow, bank reconciliation and financial statements remain future work.
+- Historical orders are not backfilled into inventory movements or journals because reliable historical quantities/cost snapshots may not exist.
+- Product units added to old databases default to zero. Review/set verified opening stock before enabling checkout.
+- Run the migration on a backup/staging database first. The migration's ALTER TABLE must be adjusted/skipped if products.units already exists. Runtime bootstrap handles existing columns.
